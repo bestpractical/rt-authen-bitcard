@@ -1,0 +1,10 @@
+name: RT-Authen-Bitcard
+version: 0.01
+abstract: Allows RT to do authentication via a service which supports the Bitcard API
+author: Kevin Riggle <kevinr@bestpractical.com>
+license: GPL version 2
+distribution_type: module
+no_index:
+  directory:
+    - inc
+generated_by: Module::Install version 0.36
