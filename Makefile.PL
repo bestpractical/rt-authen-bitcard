@@ -8,4 +8,6 @@ author          ('Kevin Riggle <kevinr@bestpractical.com>');
 version_from    ('lib/RT/Authen/Bitcard.pm');
 license         ('GPL version 2');
 
+requires        ('Authen::Bitcard');
+
 &WriteAll;
