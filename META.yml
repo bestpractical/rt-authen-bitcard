@@ -6,5 +6,6 @@ license: GPL version 2
 distribution_type: module
 no_index:
   directory:
+    - html
     - inc
 generated_by: Module::Install version 0.36

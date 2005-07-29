@@ -1,0 +1,4 @@
+<& /Elements/Header, Title => loc('Login') &>
+Redirecting you to <a href="http://www.bitcard.org">Bitcard</a> to login...
+<meta http-equiv="refresh" content="5;url=http://www.bitcard.org/" />
+% $m->abort;
