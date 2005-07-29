@@ -4,16 +4,41 @@
   $bc->token('6440e194b0ee0af1d4baec0570e496');
 
   my $user = $bc->verify(\%ARGS);
-  if ($user) {
-    print "Verified user ". $user->{'email'}. '<br />';
-    $session{'CurrentUser'} = RT::CurrentUser->new();
-    $session{'CurrentUser'}->LoadByEmail( $user->{'email'} );
-    if ( $session{'CurrentUser'}->id ) {
-      print "Loaded user ". ( $session{'CurrentUser'} )->id;
-    } else {
-      print "Couldn't load user";
-    }
-  } else {
-    print "Could not verify user";
-  }
+  print "Could not verify user" unless ($user) || ( $session{'CurrentUser'} );
+
+  # if the user isn't logged in and we got credentials from Bitcard, load them
+  if (! $session{'CurrentUser'}) && ($user) {
+
+      print "Verified user ". $user->{'email'}. '<br />';
+
+      # Bitcard has verified that the user has control of this e-mail address,
+      # so it's okay to use it to get a valid RT user
+
+      # we've got a valid user, so try to load
+      $session{'CurrentUser'} = RT::CurrentUser->new();
+      $session{'CurrentUser'}->LoadByEmail( $user->{'email'} );
+      if ( $session{'CurrentUser'}->id ) {
+          print "Loaded user ". ( $session{'CurrentUser'} )->id;
+      } 
+      else {
+          print "Couldn't load user; trying to create...";
+          $session{'CurrentUser'}->Create(
+                                           Name => $user->{'username'},
+                                           RealName => $user->{'name'},
+                                           EmailAddress => $user->{'email'},
+                                         );
+          if ( $session{'CurrentUser'}->id ) {
+              # redirect the user to their preference page to add more info
+              $m->redirect('User/Prefs.html');
+          }
+          else {
+              # we couldn't create the user.  abort abort abort!
+              delete $session{'CurrentUser'};
+              $m->abort() unless $RT::WebFallbackToInternalAuth;
+              $m->comp('/Elements/Login', %ARGS, 
+                          Error => loc('Cannot create user: [_1]', $msg) 
+                      );
+          }
+      }
+  } 
 </%INIT>
