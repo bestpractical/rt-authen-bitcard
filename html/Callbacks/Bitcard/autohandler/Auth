@@ -7,7 +7,7 @@
   print "Could not verify user" unless ($user) || ( $session{'CurrentUser'} );
 
   # if the user isn't logged in and we got credentials from Bitcard, load them
-  if (! $session{'CurrentUser'}) && ($user) {
+  if ( (! $session{'CurrentUser'}) && ($user) ) {
 
       print "Verified user ". $user->{'email'}. '<br />';
 
@@ -22,22 +22,28 @@
       } 
       else {
           print "Couldn't load user; trying to create...";
-          $session{'CurrentUser'}->Create(
-                                           Name => $user->{'username'},
-                                           RealName => $user->{'name'},
-                                           EmailAddress => $user->{'email'},
-                                         );
-          if ( $session{'CurrentUser'}->id ) {
+          my $UserObj = RT::User->new($RT::SystemUser);
+          my ($id, $msg) 
+              = $UserObj->Create(
+                                  Name => $user->{'username'},
+                                  RealName => $user->{'name'},
+                                  EmailAddress => $user->{'email'},
+                                );
+          if ( $UserObj->id ) {
+
+              # created the user, now load them as the current user
+              print "Created user";
+              $session{'CurrentUser'}->Load($UserObj->id);
+
               # redirect the user to their preference page to add more info
-              $m->redirect('User/Prefs.html');
+              # (are we creating privileged or unprivileged users?)
+              #$m->redirect('User/Prefs.html');
           }
           else {
               # we couldn't create the user.  abort abort abort!
+              print "Couldn't create user: $msg";
               delete $session{'CurrentUser'};
               $m->abort() unless $RT::WebFallbackToInternalAuth;
-              $m->comp('/Elements/Login', %ARGS, 
-                          Error => loc('Cannot create user: [_1]', $msg) 
-                      );
           }
       }
   } 
