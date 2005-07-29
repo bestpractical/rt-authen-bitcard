@@ -1,0 +1,9 @@
+<%INIT>
+  use Authen::Bitcard;
+  my $bc = Authen::Bitcard->new;
+  $bc->token('6440e194b0ee0af1d4baec0570e496');
+  my $return_url = 'http://sad-girl-in-snow.mit.edu:8080/';
+  print "Got the callback";
+</%INIT>
+
+<% $m->redirect( $bc->logout_url( r => $return_url ) ) %>
