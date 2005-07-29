@@ -2,7 +2,9 @@
   use Authen::Bitcard;
   my $bc = Authen::Bitcard->new;
   $bc->token('6440e194b0ee0af1d4baec0570e496');
-  my $login_url = $bc->login_url( r => 'http://sad-girl-in-snow.mit.edu:8080' );
+  $bc->info_required('email');
+  $bc->info_optional('username,name');
+  my $login_url = $bc->login_url( r => 'http://sad-girl-in-snow.mit.edu:8080/index.html' );
 </%INIT>
 <& /Elements/Header, Title => loc('Login') &>
 Redirecting you to <a href="<% $login_url %>">Bitcard</a> to login...
