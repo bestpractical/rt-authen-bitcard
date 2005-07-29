@@ -1,4 +1,10 @@
+<%INIT>
+  use Authen::Bitcard;
+  my $bc = Authen::Bitcard->new;
+  $bc->token('6440e194b0ee0af1d4baec0570e496');
+  my $login_url = $bc->login_url( r => 'http://sad-girl-in-snow.mit.edu:8080' );
+</%INIT>
 <& /Elements/Header, Title => loc('Login') &>
-Redirecting you to <a href="http://www.bitcard.org">Bitcard</a> to login...
-<meta http-equiv="refresh" content="5;url=http://www.bitcard.org/" />
+Redirecting you to <a href="<% $login_url %>">Bitcard</a> to login...
+<meta http-equiv="refresh" content="5;url=<% $login_url %>" />
 % $m->abort;
