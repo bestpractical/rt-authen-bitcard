@@ -5,7 +5,14 @@
 
   my $user = $bc->verify(\%ARGS);
   if ($user) {
-    print "Verified user ". $user->{'email'};
+    print "Verified user ". $user->{'email'}. '<br />';
+    $session{'CurrentUser'} = RT::CurrentUser->new();
+    $session{'CurrentUser'}->LoadByEmail( $user->{'email'} );
+    if ( $session{'CurrentUser'}->id ) {
+      print "Loaded user ". ( $session{'CurrentUser'} )->id;
+    } else {
+      print "Couldn't load user";
+    }
   } else {
     print "Could not verify user";
   }
