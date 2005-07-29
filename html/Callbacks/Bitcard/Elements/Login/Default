@@ -6,7 +6,6 @@
   $bc->info_optional('username,name');
   my $login_url = $bc->login_url( r => 'http://sad-girl-in-snow.mit.edu:8080/index.html' );
 </%INIT>
-<& /Elements/Header, Title => loc('Login') &>
-Redirecting you to <a href="<% $login_url %>">Bitcard</a> to login...
-<meta http-equiv="refresh" content="5;url=<% $login_url %>" />
-% $m->abort;
+<div class="input-row">
+    <a href="<% $login_url %>">Click here to login with Bitcard</a>
+</div>
