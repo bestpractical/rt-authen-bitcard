@@ -1,10 +1,11 @@
 <%INIT>
   use Authen::Bitcard;
   my $bc = Authen::Bitcard->new;
-  $bc->token('6440e194b0ee0af1d4baec0570e496');
+  die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server.' unless $RT::BitcardToken;
+  $bc->token($RT::BitcardToken);
   $bc->info_required('email');
   $bc->info_optional('username,name');
-  my $login_url = $bc->login_url( r => 'http://sad-girl-in-snow.mit.edu:8080/index.html' );
+  my $login_url = $bc->login_url( r => $RT::WebURL . 'index.html');
 </%INIT>
 <div class="input-row">
     <a href="<% $login_url %>">Click here to login with Bitcard</a>

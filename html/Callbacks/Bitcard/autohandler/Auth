@@ -1,7 +1,8 @@
 <%INIT>
   use Authen::Bitcard;
   my $bc = Authen::Bitcard->new;
-  $bc->token('6440e194b0ee0af1d4baec0570e496');
+  die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server.' unless $RT::BitcardToken;
+  $bc->token($RT::BitcardToken);
 
   my $user = $bc->verify(\%ARGS);
   print "Could not verify user" unless ($user) || ( $session{'CurrentUser'} );

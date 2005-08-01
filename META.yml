@@ -4,6 +4,8 @@ abstract: Allows RT to do authentication via a service which supports the Bitcar
 author: Kevin Riggle <kevinr@bestpractical.com>
 license: GPL version 2
 distribution_type: module
+requires:
+  Authen::Bitcard: 0
 no_index:
   directory:
     - html
