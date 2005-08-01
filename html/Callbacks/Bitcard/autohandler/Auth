@@ -12,6 +12,9 @@
 
       print "Verified user ". $user->{'email'}. '<br />';
 
+      # set a global user so we know elsewhere we're using Bitcard for auth
+      $session{'BitcardUser'} = $user;
+
       # Bitcard has verified that the user has control of this e-mail address,
       # so it's okay to use it to get a valid RT user
 

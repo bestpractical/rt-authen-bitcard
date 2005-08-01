@@ -6,4 +6,7 @@
   my $return_url = $RT::WebURL;
 </%INIT>
 
-<% $m->redirect( $bc->logout_url( r => $return_url ) ) %>
+<%PERL>
+  $session{'BitcardUser'} = undef;
+  $m->redirect( $bc->logout_url( r => $return_url ) );
+</%PERL>
