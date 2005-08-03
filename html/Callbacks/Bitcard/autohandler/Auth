@@ -26,19 +26,22 @@
                                   Name => $user->{'username'},
                                   RealName => $user->{'name'},
                                   EmailAddress => $user->{'email'},
+                                  Privileged => 1,
                                 );
           if ( $UserObj->id ) {
               # created the user, now load them as the current user
               $session{'CurrentUser'}->Load($UserObj->id);
 
               # redirect the user to their preference page to add more info
-              # (are we creating privileged or unprivileged users?)
-              #$m->redirect('User/Prefs.html');
+              $m->redirect($RT::WebPath . '/User/Prefs.html');
           }
           else {
               # we couldn't create the user.  abort abort abort!
               delete $session{'CurrentUser'};
-              $m->abort() unless $RT::WebFallbackToInternalAuth;
+              my $qs = $m->comp('/Elements/QueryString',
+                                 Error => loc("Cannot create user: [_1]", $msg));
+              $m->redirect($RT::WebPath . '/?' . $qs);
+              $m->abort();
           }
       }
   } 
