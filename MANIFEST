@@ -1,3 +1,7 @@
+html/Callbacks/Bitcard/autohandler/Auth
+html/Callbacks/Bitcard/Elements/Login/Default
+html/Callbacks/Bitcard/NoAuth/Logout.html/AfterSessionDelete
+html/Callbacks/Bitcard/NoAuth/Logout.html/BeforeSessionDelete
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm

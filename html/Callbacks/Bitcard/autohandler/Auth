@@ -1,16 +1,14 @@
 <%INIT>
   use Authen::Bitcard;
   my $bc = Authen::Bitcard->new;
-  die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server.' unless $RT::BitcardToken;
+  die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server.'
+        unless $RT::BitcardToken;
   $bc->token($RT::BitcardToken);
 
   my $user = $bc->verify(\%ARGS);
-  print "Could not verify user" unless ($user) || ( $session{'CurrentUser'} );
 
   # if the user isn't logged in and we got credentials from Bitcard, load them
   if ( (! $session{'CurrentUser'}) && ($user) ) {
-
-      print "Verified user ". $user->{'email'}. '<br />';
 
       # set a global user so we know elsewhere we're using Bitcard for auth
       $session{'BitcardUser'} = $user;
@@ -21,11 +19,7 @@
       # we've got a valid user, so try to load
       $session{'CurrentUser'} = RT::CurrentUser->new();
       $session{'CurrentUser'}->LoadByEmail( $user->{'email'} );
-      if ( $session{'CurrentUser'}->id ) {
-          print "Loaded user ". ( $session{'CurrentUser'} )->id;
-      } 
-      else {
-          print "Couldn't load user; trying to create...";
+      if ( not $session{'CurrentUser'}->id ) {
           my $UserObj = RT::User->new($RT::SystemUser);
           my ($id, $msg) 
               = $UserObj->Create(
@@ -34,9 +28,7 @@
                                   EmailAddress => $user->{'email'},
                                 );
           if ( $UserObj->id ) {
-
               # created the user, now load them as the current user
-              print "Created user";
               $session{'CurrentUser'}->Load($UserObj->id);
 
               # redirect the user to their preference page to add more info
@@ -45,7 +37,6 @@
           }
           else {
               # we couldn't create the user.  abort abort abort!
-              print "Couldn't create user: $msg";
               delete $session{'CurrentUser'};
               $m->abort() unless $RT::WebFallbackToInternalAuth;
           }
