@@ -8,5 +8,6 @@
   my $login_url = $bc->login_url( r => $RT::WebURL . 'index.html');
 </%INIT>
 <div class="input-row">
-    <a href="<% $login_url %>">Click here to login with Bitcard</a>
+  Have a <a href="https://bitcard.org">Bitcard</a> account?
+  <a href="<% $login_url %>">Log in with it now</a>.
 </div>
