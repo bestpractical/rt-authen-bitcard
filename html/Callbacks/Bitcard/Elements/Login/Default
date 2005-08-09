@@ -11,3 +11,7 @@
   Have a <a href="https://bitcard.org">Bitcard</a> account?
   <a href="<% $login_url %>">Log in with it now</a>.
 </div>
+<div class="input-row">
+  <a href="https://bitcard.org/register?bc=%3D%3A%3Ap%3Dbc">
+  Get a Bitcard account.</a>
+</div>
