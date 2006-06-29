@@ -7,8 +7,12 @@
 
   my $user = $bc->verify(\%ARGS);
 
-  # if the user isn't logged in and we got credentials from Bitcard, load them
-  if ( (! $session{'CurrentUser'}) && ($user) ) {
+  ### changing the 'defined $user->{'email}' line back to '$user' enables the
+  ### fsck.com #7277 exploit, if you've saved the 'Manage your Bitcard account'
+  ### URL from a previous successful Bitcard login.
+
+  # if the user isn't logged in and we got credentials from Bitcard, load the user
+  if ( (! $session{'CurrentUser'}) && (defined $user->{'email'}) ) {
 
       # set a global user so we know elsewhere we're using Bitcard for auth
       $session{'BitcardUser'} = $user;
@@ -38,6 +42,7 @@
           else {
               # we couldn't create the user.  abort abort abort!
               delete $session{'CurrentUser'};
+              delete $session{'BitcardUser'};
               my $qs = $m->comp('/Elements/QueryString',
                                  Error => loc("Cannot create user: [_1]", $msg));
               $m->redirect($RT::WebPath . '/?' . $qs);

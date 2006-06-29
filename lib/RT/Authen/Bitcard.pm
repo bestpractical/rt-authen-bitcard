@@ -7,7 +7,7 @@ It is freely redistributable under the terms of version 2 of the GNU GPL.
 
 =cut
 
-package RT::Auth::TypeKey;
+package RT::Authen::Bitcard;
 
 our $VERSION = '0.01';
 
