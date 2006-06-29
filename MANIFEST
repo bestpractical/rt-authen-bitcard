@@ -1,4 +1,5 @@
 html/Callbacks/Bitcard/autohandler/Auth
+html/Callbacks/Bitcard/Elements/Header/Default
 html/Callbacks/Bitcard/Elements/Login/Default
 html/Callbacks/Bitcard/NoAuth/Logout.html/AfterSessionDelete
 html/Callbacks/Bitcard/NoAuth/Logout.html/BeforeSessionDelete
