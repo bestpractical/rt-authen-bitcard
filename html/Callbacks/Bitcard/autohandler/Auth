@@ -12,7 +12,6 @@
 
   my $user = $bc->verify(\%ARGS) 
       or $RT::Logger->warning("Bitcard verify() returned null: @{[$bc->errstr]}");
-  $RT::Logger->debug("Bitcard verify() returned null: @{[$bc->errstr]}") unless $user;
 
   ### changing the 'defined $user->{'email}' line back to '$user' enables the
   ### fsck.com #7277 exploit, if you've saved the 'Manage your Bitcard account'
