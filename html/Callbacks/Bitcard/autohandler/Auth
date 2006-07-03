@@ -1,11 +1,17 @@
 <%INIT>
+  die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server.'
+      unless $RT::BitcardToken;
+
+  # if we aren't processing a bc request, there's nothing to do here,
+  # so bail quickly
+  return unless exists $ARGS{bc_id};
+
   use Authen::Bitcard;
   my $bc = Authen::Bitcard->new;
-  die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server.'
-        unless $RT::BitcardToken;
   $bc->token($RT::BitcardToken);
 
-  my $user = $bc->verify(\%ARGS);
+  my $user = $bc->verify(\%ARGS) 
+      or $RT::Logger->warn($bc->errstr);
 
   ### changing the 'defined $user->{'email}' line back to '$user' enables the
   ### fsck.com #7277 exploit, if you've saved the 'Manage your Bitcard account'
@@ -35,6 +41,7 @@
           if ( $UserObj->id ) {
               # created the user, now load them as the current user
               $session{'CurrentUser'}->Load($UserObj->id);
+              $m->comp('/Elements/Callback', %ARGS, _CallbackName => 'NewUser');
 
               # redirect the user to their preference page to add more info
               $m->redirect($RT::WebPath . '/User/Prefs.html');
