@@ -11,7 +11,7 @@
   $bc->token($RT::BitcardToken);
 
   my $user = $bc->verify(\%ARGS) 
-      or $RT::Logger->debug("Bitcard verify() returned null: @{[$bc->errstr]}");
+      or $RT::Logger->warning("Bitcard verify() returned null: @{[$bc->errstr]}");
   $RT::Logger->debug("Bitcard verify() returned null: @{[$bc->errstr]}") unless $user;
 
   ### changing the 'defined $user->{'email}' line back to '$user' enables the
