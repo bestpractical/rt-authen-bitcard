@@ -9,5 +9,6 @@ version_from    ('lib/RT/Authen/Bitcard.pm');
 license         ('GPL version 2');
 
 requires        ('Authen::Bitcard');
+requires        ('Encode');
 
 &WriteAll;
