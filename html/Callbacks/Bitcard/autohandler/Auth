@@ -10,8 +10,15 @@
   my $bc = Authen::Bitcard->new;
   $bc->token($RT::BitcardToken);
 
-  my $user = $bc->verify(\%ARGS) 
+  # We have to use octets as Authen::Bitcard doesn't support perl strings
+  # to avoid converting back from perl string to octets we use request_args
+  my $user = $bc->verify( scalar $m->request_args )
       or $RT::Logger->warning("Bitcard verify() returned null: @{[$bc->errstr]}");
+
+  # upgrade octets returned by An::BC into perl strings
+  use Encode ();
+  $user->{ $_ } = Encode::decode_utf8( $user->{ $_ } )
+      foreach grep defined $user->{$_}, keys %$user;
 
   ### changing the 'defined $user->{'email}' line back to '$user' enables the
   ### fsck.com #7277 exploit, if you've saved the 'Manage your Bitcard account'
