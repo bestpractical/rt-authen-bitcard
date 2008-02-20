@@ -8,7 +8,7 @@
             unless $RT::BitcardToken;
       
       $bc->token($RT::BitcardToken);
-      my $return_url = $RT::WebURL;
+      my $return_url = $RT::WebURL . 'index.html';
       
       $m->redirect( $bc->logout_url( r => $return_url ) );
       $m->abort();
