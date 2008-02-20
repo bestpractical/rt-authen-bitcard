@@ -17,4 +17,4 @@ no_index:
 requires: 
   Authen::Bitcard: 0
   Encode: 0
-version: 0.01
+version: 0.02

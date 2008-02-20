@@ -9,6 +9,6 @@ It is freely redistributable under the terms of version 2 of the GNU GPL.
 
 package RT::Authen::Bitcard;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 1;
