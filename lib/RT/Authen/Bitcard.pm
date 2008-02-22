@@ -11,4 +11,19 @@ package RT::Authen::Bitcard;
 
 our $VERSION = '0.02';
 
+use Authen::Bitcard 0.86;
+
+sub handler {
+    my $self = shift;
+
+    die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server.'
+        unless $RT::BitcardToken;
+
+    my $bc = Authen::Bitcard->new;
+    $bc->token( $RT::BitcardToken );
+    $bc->info_required('email,username');
+    $bc->info_optional('name');
+    return $bc;
+}
+
 1;
