@@ -1,11 +1,8 @@
 <%INIT>
-  use Authen::Bitcard;
-  my $bc = Authen::Bitcard->new;
-  die 'No Bitcard auth token provided as $BitcardToken in the RT configuration file on this server' unless $RT::BitcardToken;
-  $bc->token($RT::BitcardToken);
-  my $account_url = $bc->account_url( r => $RT::WebURL . 'index.html' );
-</%INIT>
+return unless $session{'BitcardUser'};
 
-% if ($session{'BitcardUser'}) {
-    | <a href="<% $account_url %>"><&|/l&>Manage Bitcard account</&></a>
-% }
+use RT::Authen::Bitcard;
+my $bc = RT::Authen::Bitcard->handler;
+my $account_url = $bc->account_url( r => $RT::WebURL . 'index.html' );
+</%INIT>
+| <a href="<% $account_url %>"><&|/l&>Manage Bitcard account</&></a>
