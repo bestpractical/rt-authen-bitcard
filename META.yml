@@ -15,6 +15,6 @@ no_index:
     - inc
     - t
 requires: 
-  Authen::Bitcard: 0
+  Authen::Bitcard: 0.86
   Encode: 0
 version: 0.02

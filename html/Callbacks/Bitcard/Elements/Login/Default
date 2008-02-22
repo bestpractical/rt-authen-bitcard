@@ -5,13 +5,13 @@
   $bc->token($RT::BitcardToken);
   $bc->info_required('email,username');
   $bc->info_optional('name');
-  my $login_url = $bc->login_url( r => $RT::WebURL . 'index.html');
+  my $return_to = $RT::WebURL . 'index.html';
 </%INIT>
 <div class="input-row">
   Have a <a href="https://www.bitcard.org">Bitcard</a> account?
-  <a href="<% $login_url %>">Log in with it now</a>.
+  <a href="<% $bc->login_url( r => $return_to ) %>">Log in with it now</a>.
 </div>
 <div class="input-row">
-  <a href="https://www.bitcard.org/register?bc=%3D%3A%3Ap%3Dbc">
+  <a href="<% $bc->register_url( r => $return_to ) %>">
   Get a Bitcard account.</a>
 </div>
