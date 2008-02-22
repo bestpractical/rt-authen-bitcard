@@ -4,7 +4,7 @@
   my $return_to = $RT::WebURL . 'index.html';
 </%INIT>
 <div class="input-row">
-  Have a <a href="https://www.bitcard.org">Bitcard</a> account?
+  Have a <a href="<% $bc->bitcard_url %>">Bitcard</a> account?
   <a href="<% $bc->login_url( r => $return_to ) %>">Log in with it now</a>.
 </div>
 <div class="input-row">
