@@ -1,15 +1,16 @@
+=head1 NAME
 
-=head1 COPYRIGHT
-
-This extension is Copyright (C) 2005 Best Practical Solutions, LLC.
-
-It is freely redistributable under the terms of version 2 of the GNU GPL.
+RT::Authen::Bitcard - Allows RT to do authentication via a service which supports the Bitcard API
 
 =cut
 
 package RT::Authen::Bitcard;
 
-our $VERSION = '0.03';
+use v5.8.3;
+use strict;
+use warnings;
+
+our $VERSION = '0.04';
 
 use Authen::Bitcard 0.86;
 
@@ -27,3 +28,16 @@ sub handler {
 }
 
 1;
+
+=head1 AUTHOR
+
+Kevin Riggle E<lt>kevinr@bestpractical.comE<gt>
+
+=head1 COPYRIGHT
+
+This extension is Copyright (C) 2005-2008 Best Practical Solutions, LLC.
+
+It is freely redistributable under the terms of version 2 of the GNU GPL.
+
+=cut
+

@@ -2,13 +2,11 @@ use inc::Module::Install;
 
 RTx('RT-Authen-Bitcard');
 
-name            ('RT-Authen-Bitcard');
-abstract        ('Allows RT to do authentication via a service which supports the Bitcard API');
-author          ('Kevin Riggle <kevinr@bestpractical.com>');
-version_from    ('lib/RT/Authen/Bitcard.pm');
-license         ('GPL version 2');
+abstract_from   ('lib/RT/Authen/Bitcard.pm');
+license         ('GPL2');
+all_from        ('lib/RT/Authen/Bitcard.pm');
 
 requires        ('Authen::Bitcard' => '0.86'); # we need register_url method
 requires        ('Encode');
 
-&WriteAll;
+WriteAll();
