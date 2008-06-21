@@ -22,7 +22,7 @@
       $m->abort();
   }
 
-  # upgrade octets returned by An::BC into perl strings
+  # upgrade octets returned by Authen::BC into perl strings
   use Encode ();
   $user->{ $_ } = Encode::decode_utf8( $user->{ $_ } )
       foreach grep defined $user->{$_}, keys %$user;
@@ -40,40 +40,45 @@
       $m->abort();
   }
 
-  # set a global user so we know elsewhere we're using Bitcard for auth
-  $session{'BitcardUser'} = $user;
-
   # Bitcard has verified that the user has control of this e-mail address,
   # so it's okay to use it to get a valid RT user
 
   # we've got a valid user, so try to load
-  $session{'CurrentUser'} = RT::CurrentUser->new();
-  $session{'CurrentUser'}->LoadByEmail( $user->{'email'} );
-  if ( not $session{'CurrentUser'}->id ) {
-      my $UserObj = RT::User->new( $RT::SystemUser );
-      my ($id, $msg) = $UserObj->Create(
-          Name => $user->{'username'},
-          RealName => $user->{'name'},
-          EmailAddress => $user->{'email'},
-          Privileged => 1,
-      );
-      if ( $UserObj->id ) {
-          # created the user, now load them as the current user
-          $session{'CurrentUser'}->Load($UserObj->id);
-          $m->comp('/Elements/Callback', %ARGS, _CallbackName => 'NewUser');
+  my $cu = new RT::CurrentUser;
+  $cu->LoadByEmail( $user->{'email'} );
+  if ( $cu->id ) {
+      # set a global user so we know elsewhere we're using Bitcard for auth
+      $session{'BitcardUser'} = $user;
+      $session{'CurrentUser'} = $cu;
+      return;
+  }
 
-          # redirect the user to their preference page to add more info
-          $m->redirect($RT::WebPath . '/User/Prefs.html');
-          $m->abort();
-      }
-      else {
-          # we couldn't create the user.  abort abort abort!
-          delete $session{'CurrentUser'};
-          delete $session{'BitcardUser'};
-          my $qs = $m->comp('/Elements/QueryString',
-                             Error => loc("Cannot create user: [_1]", $msg));
-          $m->redirect($RT::WebPath . '/?' . $qs);
-          $m->abort();
-      }
+  my $UserObj = RT::User->new( $RT::SystemUser );
+  my ($id, $msg) = $UserObj->Create(
+      Name         => $user->{'username'},
+      RealName     => $user->{'name'},
+      EmailAddress => $user->{'email'},
+      Privileged   => 1,
+  );
+  if ( $UserObj->id ) {
+      # created the user, now load them as the current user
+      $cu->Load( $UserObj->id );
+
+      # set a global user so we know elsewhere we're using Bitcard for auth
+      $session{'BitcardUser'} = $user;
+      $session{'CurrentUser'} = $cu;
+
+      $m->comp('/Elements/Callback', %ARGS, _CallbackName => 'NewUser');
+
+      # redirect the user to their preference page to add more info
+      $m->redirect($RT::WebPath . '/User/Prefs.html');
+      $m->abort();
+  }
+  else {
+      # we couldn't create the user.  abort abort abort!
+      my $qs = $m->comp('/Elements/QueryString',
+                         Error => loc("Cannot create user: [_1]", $msg));
+      $m->redirect($RT::WebPath . '/?' . $qs);
+      $m->abort();
   }
 </%INIT>
