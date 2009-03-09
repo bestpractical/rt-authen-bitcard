@@ -3,6 +3,13 @@
   # so bail quickly
   return unless exists $ARGS{bc_id};
 
+  my $error_cb = sub {
+      my %args = @_;
+      my $qs = $m->comp('/Elements/QueryString', Error => $args{'Error'} );
+      $m->redirect( $RT::WebPath . '/?' . $qs);
+      $m->abort();
+  };
+
   # flush the current session if user tries to login using bitcard
   %session = (_session_id => $session{'_session_id'});
 
@@ -16,10 +23,7 @@
   # bitcard user verify error.  abort abort abort!
   unless ( $user ) {
       $RT::Logger->warning( "Bitcard verify() returned undef: ". $bc->errstr );
-      my $qs = $m->comp('/Elements/QueryString',
-                      Error => $bc->errstr );
-      $m->redirect( $RT::WebPath . '/?' . $qs);
-      $m->abort();
+      $error_cb->( Error => $bc->errstr );
   }
 
   # upgrade octets returned by Authen::BC into perl strings
@@ -34,10 +38,7 @@
   # if the user isn't logged in and we got credentials from Bitcard, load the user
   unless ( defined $user->{'email'} && defined $user->{'username'} ) {
       $RT::Logger->error("Bitcard server didn't provided email and user name, but signature is correct");
-      my $qs = $m->comp('/Elements/QueryString',
-          Error => loc("Couldn't login using Bitcard. Contact system administrator") );
-      $m->redirect( $RT::WebPath . '/?' . $qs);
-      $m->abort();
+      $error_cb->( Error => loc("Couldn't login using Bitcard. Contact system administrator") );
   }
 
   # Bitcard has verified that the user has control of this e-mail address,
@@ -76,9 +77,6 @@
   }
   else {
       # we couldn't create the user.  abort abort abort!
-      my $qs = $m->comp('/Elements/QueryString',
-                         Error => loc("Cannot create user: [_1]", $msg));
-      $m->redirect($RT::WebPath . '/?' . $qs);
-      $m->abort();
+      $error_cb->( Error => loc("Cannot create user: [_1]", $msg) );
   }
 </%INIT>
