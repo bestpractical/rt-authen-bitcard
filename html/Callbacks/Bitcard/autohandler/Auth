@@ -54,9 +54,19 @@
       return;
   }
 
+  # No user with this email in the DB, let's create it
+
+  # first of all check if username is free then create a new user
+  my $login_is_free = 0;
+  {
+      my $UserObj = RT::User->new( $RT::SystemUser );
+      $UserObj->Load( $user->{'username'} );
+      $login_is_free = $UserObj->id? 0 : 1;
+  }
+
   my $UserObj = RT::User->new( $RT::SystemUser );
   my ($id, $msg) = $UserObj->Create(
-      Name         => $user->{'username'},
+      Name         => $login_is_free? $user->{'username'}: $user->{'email'},
       RealName     => $user->{'name'},
       EmailAddress => $user->{'email'},
       Privileged   => 1,
