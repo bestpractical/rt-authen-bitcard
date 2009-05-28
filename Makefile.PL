@@ -9,4 +9,6 @@ all_from        ('lib/RT/Authen/Bitcard.pm');
 requires        ('Authen::Bitcard' => '0.86'); # we need register_url method
 requires        ('Encode');
 
+auto_install();
+
 WriteAll();
