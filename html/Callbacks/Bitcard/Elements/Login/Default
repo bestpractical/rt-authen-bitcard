@@ -2,8 +2,10 @@
   use RT::Authen::Bitcard;
   my $bc = RT::Authen::Bitcard->handler;
   my $return_to = $RT::WebURL . 'index.html';
+  my $login_url = $m->interp->apply_escapes( $bc->login_url( r => $return_to ), 'h' );
+  my $register_url = $m->interp->apply_escapes( $bc->register_url( r => $return_to ), 'h' );
 </%INIT>
 <h3><% loc('Have a <em>Bitcard</em> account?') |n %></h3>
 <p>
-<% loc('<a href="[_1]">Log in with it</a> now or get a <a href="[_1]">Bitcard account</a>.', $return_to ) |n %>
+<% loc('<a href="[_1]">Log in with it</a> now or get a <a href="[_2]">Bitcard account</a>.', $login_url, $register_url ) |n %>
 </p>
