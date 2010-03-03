@@ -14,7 +14,7 @@
   %session = (_session_id => $session{'_session_id'});
 
   use RT::Authen::Bitcard;
-  my $bc = RT::Authen::Bitcard->handler;
+  my $bc = RT::Authen::Bitcard->Handler;
 
   # We have to use octets as Authen::Bitcard doesn't support perl strings
   # to avoid converting back from perl string to octets we use request_args
@@ -35,10 +35,15 @@
   ### fsck.com #7277 exploit, if you've saved the 'Manage your Bitcard account'
   ### URL from a previous successful Bitcard login.
 
-  # if the user isn't logged in and we got credentials from Bitcard, load the user
-  unless ( defined $user->{'email'} && defined $user->{'username'} ) {
-      $RT::Logger->error("Bitcard server didn't provided email and user name, but signature is correct");
-      $error_cb->( Error => loc("Couldn't login using Bitcard. Contact system administrator") );
+  my $required = RT::Authen::Bitcard->RequiredFields;
+  if ( grep !defined $user->{$_}, @$required  ) {
+      $RT::Logger->error(
+        "Bitcard server didn't provided ". join(", ", @$required)
+        .", but signature is correct"
+      );
+      $error_cb->(
+        Error => loc("Couldn't login using Bitcard. Contact system administrator")
+      );
   }
 
   # Bitcard has verified that the user has control of this e-mail address,
@@ -54,39 +59,23 @@
       return;
   }
 
-  # No user with this email in the DB, let's create it
-
-  # first of all check if username is free then create a new user
-  my $login_is_free = 0;
-  {
-      my $UserObj = RT::User->new( $RT::SystemUser );
-      $UserObj->Load( $user->{'username'} );
-      $login_is_free = $UserObj->id? 0 : 1;
-  }
-
-  my $UserObj = RT::User->new( $RT::SystemUser );
-  my ($id, $msg) = $UserObj->Create(
-      Name         => $login_is_free? $user->{'username'}: $user->{'email'},
-      RealName     => $user->{'name'},
-      EmailAddress => $user->{'email'},
-      Privileged   => 1,
+  my ($user_obj, $msg) = RT::Authen::Bitcard->CreateUser(
+      BitcardUser => $user,
   );
-  if ( $UserObj->id ) {
-      # created the user, now load them as the current user
-      $cu->Load( $UserObj->id );
-
-      # set a global user so we know elsewhere we're using Bitcard for auth
-      $session{'BitcardUser'} = $user;
-      $session{'CurrentUser'} = $cu;
-
-      $m->comp('/Elements/Callback', %ARGS, _CallbackName => 'NewUser');
-
-      # redirect the user to their preference page to add more info
-      $m->redirect($RT::WebPath . '/User/Prefs.html');
-      $m->abort();
-  }
-  else {
-      # we couldn't create the user.  abort abort abort!
+  unless ( $user_obj ) {
       $error_cb->( Error => loc("Cannot create user: [_1]", $msg) );
   }
+
+  # created the user, now load them as the current user
+  $cu->Load( $user_obj->id );
+
+  # set a global user so we know elsewhere we're using Bitcard for auth
+  $session{'BitcardUser'} = $user;
+  $session{'CurrentUser'} = $cu;
+
+  $m->comp('/Elements/Callback', %ARGS, _CallbackName => 'NewUser');
+
+  # redirect the user to their preference page to add more info
+  $m->redirect( $RT::WebPath . '/User/Prefs.html' );
+  $m->abort;
 </%INIT>

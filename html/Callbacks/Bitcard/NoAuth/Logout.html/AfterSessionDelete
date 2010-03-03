@@ -2,7 +2,7 @@
 return unless $m->notes('isBitcardUser');
 
 use RT::Authen::Bitcard;
-my $bc = RT::Authen::Bitcard->handler;
+my $bc = RT::Authen::Bitcard->Handler;
 my $return_url = $RT::WebURL . 'index.html';
 $m->redirect( $bc->logout_url( r => $return_url ) );
 $m->abort;

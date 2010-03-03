@@ -1,6 +1,6 @@
 <%INIT>
   use RT::Authen::Bitcard;
-  my $bc = RT::Authen::Bitcard->handler;
+  my $bc = RT::Authen::Bitcard->Handler;
   my $return_to = $RT::WebURL . 'index.html';
   my $login_url = $m->interp->apply_escapes( $bc->login_url( r => $return_to ), 'h' );
   my $register_url = $m->interp->apply_escapes( $bc->register_url( r => $return_to ), 'h' );
