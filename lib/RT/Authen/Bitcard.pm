@@ -44,6 +44,12 @@ my %RT2BC = (
 );
 my %BC2RT = reverse %RT2BC;
 
+require RT::Config;
+unless (exists $RT::Config::META{'ReferrerWhitelist'}) {  # future RT versions will fix this
+    $RT::Config::META{'ReferrerWhitelist'} = { Type => 'ARRAY' };
+}
+RT->Config->Set('ReferrerWhitelist',('www.bitcard.org:443',RT->Config->Get('ReferrerWhitelist')));
+
 sub Handler {
     my $self = shift;
 
