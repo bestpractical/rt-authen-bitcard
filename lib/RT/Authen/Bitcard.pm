@@ -4,7 +4,7 @@ use warnings;
 
 package RT::Authen::Bitcard;
 
-our $VERSION = '0.04';
+our $VERSION = '0.04_01';
 
 use Authen::Bitcard 0.86;
 
@@ -118,7 +118,7 @@ Kevin Riggle E<lt>kevinr@bestpractical.comE<gt>
 
 =head1 COPYRIGHT
 
-This extension is Copyright (C) 2005-2008 Best Practical Solutions, LLC.
+This extension is Copyright (C) 2005-2012 Best Practical Solutions, LLC.
 
 It is freely redistributable under the terms of version 2 of the GNU GPL.
 
