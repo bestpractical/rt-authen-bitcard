@@ -54,6 +54,7 @@
   $cu->LoadByEmail( $user->{'email'} );
   if ( $cu->id ) {
       # set a global user so we know elsewhere we're using Bitcard for auth
+      RT::Interface::Web::InstantiateNewSession();
       $session{'BitcardUser'} = $user;
       $session{'CurrentUser'} = $cu;
       return;
@@ -70,6 +71,7 @@
   $cu->Load( $user_obj->id );
 
   # set a global user so we know elsewhere we're using Bitcard for auth
+  RT::Interface::Web::InstantiateNewSession();
   $session{'BitcardUser'} = $user;
   $session{'CurrentUser'} = $cu;
 
