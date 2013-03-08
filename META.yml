@@ -1,14 +1,15 @@
 ---
-abstract: 'Allows RT to do authentication via a service which supports the Bitcard API'
+abstract: 'allows RT to do authentication via a service which supports the Bitcard API'
 author:
   - 'Kevin Riggle <kevinr@bestpractical.com>'
 build_requires:
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.59
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.59
 distribution_type: module
-generated_by: 'Module::Install version 0.91'
-license: GPL2
+dynamic_config: 1
+generated_by: 'Module::Install version 1.06'
+license: gpl2
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -22,5 +23,5 @@ requires:
   Encode: 0
   perl: 5.8.3
 resources:
-  license: http://opensource.org/licenses/gpl-license.php
-version: 0.04
+  license: http://opensource.org/licenses/gpl-2.0.php
+version: 0.04_01
